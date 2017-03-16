@@ -6,6 +6,7 @@ import cecs323.jdbcproject.pojos.BookKeyData;
 import cecs323.jdbcproject.pojos.Publisher;
 import cecs323.jdbcproject.pojos.WritingGroup;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 /**
@@ -78,7 +79,7 @@ public interface DatabaseOperations  {
      * @param book the book to insert
      * @throws SQLException if a SQLException occurs while attempting to insert
      */
-    public void insertBook(Book book) throws SQLException;
+    public void insertBook(Book book) throws SQLIntegrityConstraintViolationException, SQLException;
     
     /**
      * Replaces the given old publisher name with a new one, for all books
@@ -88,7 +89,7 @@ public interface DatabaseOperations  {
      * @param newName the name of the publisher replacing the old one
      * @throws SQLException if a SQLException occurs while updating
      */
-    public void replacePublisher(String oldName, String newName) throws SQLException;
+    public void replacePublisher(String oldName, String newName) throws SQLIntegrityConstraintViolationException, SQLException;
     
     /**
      * Deletes the book with the given title and writing group from the books
@@ -140,7 +141,7 @@ public interface DatabaseOperations  {
      * @param info the info of the publisher to insert
      * @throws java.sql.SQLException if a SQLException occurs while inserting
      */
-    public void insertPublisher(Publisher info) throws SQLException;
+    public void insertPublisher(Publisher info) throws SQLIntegrityConstraintViolationException, SQLException;
     
         /**
      * Returns a {@link List} of Strings, containing the names of all of the
@@ -176,7 +177,7 @@ public interface DatabaseOperations  {
      * @param group the writing group to insert
      * @throws SQLException if an exception is thrown while trying to insert
      */
-    public void insertWritingGroup(WritingGroup group) throws SQLException;
+    public void insertWritingGroup(WritingGroup group) throws SQLIntegrityConstraintViolationException, SQLException;
     
     /**
      * Deletes the writing group with the given name.
@@ -184,5 +185,5 @@ public interface DatabaseOperations  {
      * @param groupName the name of the writing group to delete
      * @throws SQLException if an exception is raised while deleting
      */
-    public void deleteWritingGroup(String groupName) throws SQLException;
+    public void deleteWritingGroup(String groupName) throws SQLIntegrityConstraintViolationException, SQLException;
 }
