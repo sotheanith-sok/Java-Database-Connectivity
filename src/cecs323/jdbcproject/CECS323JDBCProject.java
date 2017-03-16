@@ -131,8 +131,9 @@ public class CECS323JDBCProject {
     /**
      * List all data related to all writing groups
      * @param w WritingGroupOperations object.
+     * @throws SQLException 
      */
-    public static void listAllWritingGroups(WritingGroupOperations w){
+    public static void listAllWritingGroups(DatabaseOperations w) throws SQLException{
         List<WritingGroup> list=w.listWritingGroups();
         System.out.printf("%-10s%-10s%-10s%-10s", "GroupName","HeadWriter","YearFormed","Subject");
         for (int i=0; i<list.size();i++){
@@ -145,9 +146,10 @@ public class CECS323JDBCProject {
      * List all data for a specific WritingGroup (4)
      * @param w WritingGroupOperations object
      * @param in Scanner for keyboard
+     * @throws SQLException 
      */
-    public static void listDataForAWritingGroup(WritingGroupOperations w,Scanner in){
-		int i=printDataAndGetInput(w,in);
+    public static void listDataForAWritingGroup(DatabaseOperations w,Scanner in) throws SQLException{
+		int i=printDataAndGetInput(w,in, 1);
 		List<WritingGroup>list=w.listWritingGroups();
 		System.out.printf("%-10s%-10s%-10s%-10s", "GroupName","HeadWriter","YearFormed","Subject");
         System.out.printf("%-10s%-10s%-10s%-10s",list.get(i).groupName,list.get(i).headWriter,list.get(i).subject,list.get(i).yearFormed);		
@@ -156,8 +158,9 @@ public class CECS323JDBCProject {
     /**
      * List information related to all publishers (4)
      * @param p PublisherOperations object
+     * @throws SQLException 
      */
-    public static void listAllPublisher(PublisherOperations p){
+    public static void listAllPublisher(DatabaseOperations p) throws SQLException{
 		List<Publisher> list=p.listPublishers();
 		System.out.printf("%-10s%-10s%-10s%-10s", "PublisherName","PublisherAddress","PublisherPhone","PublisherEmail");
         for (int i=0; i<list.size();i++){
@@ -169,8 +172,9 @@ public class CECS323JDBCProject {
     /**
      * List all the book title
      * @param b
+     * @throws SQLException 
      */
-    public static void listAllBookTitle(BookOperations b){
+    public static void listAllBookTitle(DatabaseOperations b) throws SQLException{
     	List<String> list=b.listBookTitles();
     	System.out.printf("%-10s%","BookTitle");
         for (int i=0; i<list.size();i++){
@@ -182,13 +186,14 @@ public class CECS323JDBCProject {
      * List all data for a specific book including related writing group and publisher.
      * @param b BookOperations object
      * @param in Scanner for keyboard
+     * @throws SQLException 
      */
-    public static void listDataForABook(BookOperations b, Scanner in){
+    public static void listDataForABook(DatabaseOperations b, Scanner in) throws SQLException{
 		System.out.print("Enter GroupName:");
 		String GroupName=in.nextLine();
 		System.out.print("Enter BookTitle: ");
 		String BookTitle=in.nextLine();
-		Book book= b.getBook(new BookKeyData(GroupName, BookTitle));
+		Book book= b.getBook(new BookKeyData( BookTitle, GroupName));
     }
     public static void insertABook(){
 		
@@ -205,16 +210,17 @@ public class CECS323JDBCProject {
      * @param o Object of types: BookOperations, PublisherOperations, or WritingGroupOperations.
      * @param in Scanner from keyboard
      * @return user choice
+     * @throws SQLException 
      */
-    public static int printDataAndGetInput(Object o, Scanner in){
+    public static int printDataAndGetInput(Object o, Scanner in, int k) throws SQLException{
     	List<String> list;
     	boolean done=false;
     	int choice=-1;
     	//Get the list
-    	if (o instanceof WritingGroupOperations){
-    		list= ((WritingGroupOperations)o).listWritingGroupNames();
+    	if (k==1){
+    		list= ((DatabaseOperations)o).listWritingGroupNames();
     	}else{
-    		list= ((PublisherOperations)o).listPublisherNames();
+    		list= ((DatabaseOperations)o).listPublisherNames();
     	}
     	
     	//Print the list
