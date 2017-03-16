@@ -22,241 +22,295 @@ import java.util.List;
  * @author Nicholas Utz
  */
 public class OpsImplFactory {
-    public static DatabaseOperations getOperationsImpl(Connection con) throws SQLException {
-        return new OpsImpl(con);
-    }
+	public static DatabaseOperations getOperationsImpl(Connection con) throws SQLException {
+		return new OpsImpl(con);
+	}
 }
 
 class OpsImpl implements DatabaseOperations {
 
-    private final Connection con;
-    
-    private static final String SQL_GET_TITLES = "SELECT booktitle FROM books";
-    private static final String SQL_GET_BOOKS = "SELECT * FROM books";
-    private static final String SQL_GET_BOOK = "SELECT * FROM books WHERE booktitle=? && groupname=?";
-    private static final String SQL_INSERT_BOOK = "INSERT INTO books (groupname, booktitle, " +
-            "publishername, yearpublished, numberpages) VALUES" + 
-            "(?,?,?,?,?)";
-    private static final String SQL_UPDATE_PUBLISHERS = "UPDATE books SET publishername=? WHERE publishername=?";
-    private static final String SQL_DELETE_BOOK = "DELETE FROM books WHERE booktitle=? & writinggroup=?";
-    private static final String SQL_GET_PUBLISHER_NAMES = "SELECT publishername FROM publishers";
-    private static final String SQL_GET_PUBLISHERS = "SELECT * FROM publishers";
-    private static final String SQL_GET_PUBLISHER = "SELECT * FROM publishers WHERE publishername=?";
-    
-    private final PreparedStatement PSTMT_GET_BOOK;
-    private final PreparedStatement PSTMT_INSERT_BOOK;
-    private final PreparedStatement PSTMT_UPDATE_PUBLISHERS;
-    private final PreparedStatement PSTMT_DELETE_BOOK;
-    private final PreparedStatement PSTMT_GET_PUBLISHER;
-    
-    public OpsImpl(Connection con) throws SQLException {
-        this.con = con;
-        this.PSTMT_GET_BOOK = con.prepareStatement(SQL_GET_BOOK);
-        this.PSTMT_INSERT_BOOK = con.prepareStatement(SQL_INSERT_BOOK);
-        this.PSTMT_UPDATE_PUBLISHERS = con.prepareStatement(SQL_UPDATE_PUBLISHERS);
-        this.PSTMT_DELETE_BOOK = con.prepareStatement(SQL_DELETE_BOOK);
-        this.PSTMT_GET_PUBLISHER = con.prepareStatement(SQL_GET_PUBLISHER);
-    }
-    
-    @Override
-    public List<String> listBookTitles() throws SQLException {
-        Statement stmt = this.con.createStatement();
-        List<String> titles = new LinkedList<>();
-        ResultSet results = stmt.executeQuery(SQL_GET_TITLES);
-        
-        while (results.next()) {
-            titles.add(results.getString(1));
-        }
-        
-        results.close();
-        stmt.close();
-        
-        return titles;
-    }
+	private final Connection con;
 
-    @Override
-    public List<Book> listBooks() throws SQLException {
-        Statement stmt = this.con.createStatement();
-        List<Book> books = new LinkedList<>();
-        ResultSet results = stmt.executeQuery(SQL_GET_BOOKS);
-        
-        while (results.next()) {
-            books.add(new Book(results.getString(2), results.getString(1), 
-                    results.getString(3), results.getString(4),
-                    results.getInt(5)));
-        }
-        
-        results.close();
-        stmt.close();
-        
-        return books;
-    }
+	private static final String SQL_GET_TITLES = "SELECT booktitle FROM books";
+	private static final String SQL_GET_BOOKS = "SELECT * FROM books";
+	private static final String SQL_GET_BOOK = "SELECT * FROM books WHERE booktitle=? && groupname=?";
+	private static final String SQL_INSERT_BOOK = "INSERT INTO books (groupname, booktitle, "
+			+ "publishername, yearpublished, numberpages) VALUES" + "(?,?,?,?,?)";
+	private static final String SQL_UPDATE_PUBLISHERS = "UPDATE books SET publishername=? WHERE publishername=?";
+	private static final String SQL_DELETE_BOOK = "DELETE FROM books WHERE booktitle=? & writinggroup=?";
+	private static final String SQL_GET_PUBLISHER_NAMES = "SELECT publishername FROM publishers";
+	private static final String SQL_GET_PUBLISHERS = "SELECT * FROM publishers";
+	private static final String SQL_GET_PUBLISHER = "SELECT * FROM publishers WHERE publishername=?";
 
-    @Override
-    public Book getBook(String title, String writingGroup) throws SQLException {
-        this.PSTMT_GET_BOOK.setString(1, title);
-        this.PSTMT_GET_BOOK.setString(2, writingGroup);
-        ResultSet results = this.PSTMT_GET_BOOK.executeQuery();
-        
-        if (results.next()) {
-            Book book = new Book(results.getString(2), results.getString(1), 
-                    results.getString(3), results.getString(4), 
-                    results.getInt(5));
-            results.close();
-            return book;
-            
-        } else {
-            results.close();
-            return null;
-        }
-    }
+	private final PreparedStatement PSTMT_GET_BOOK;
+	private final PreparedStatement PSTMT_INSERT_BOOK;
+	private final PreparedStatement PSTMT_UPDATE_PUBLISHERS;
+	private final PreparedStatement PSTMT_DELETE_BOOK;
+	private final PreparedStatement PSTMT_GET_PUBLISHER;
 
-    @Override
-    public Book getBook(BookKeyData key) throws SQLException {
-        return getBook(key.bookTitle, key.writingGroup);
-    }
+	public OpsImpl(Connection con) throws SQLException {
+		this.con = con;
+		this.PSTMT_GET_BOOK = con.prepareStatement(SQL_GET_BOOK);
+		this.PSTMT_INSERT_BOOK = con.prepareStatement(SQL_INSERT_BOOK);
+		this.PSTMT_UPDATE_PUBLISHERS = con.prepareStatement(SQL_UPDATE_PUBLISHERS);
+		this.PSTMT_DELETE_BOOK = con.prepareStatement(SQL_DELETE_BOOK);
+		this.PSTMT_GET_PUBLISHER = con.prepareStatement(SQL_GET_PUBLISHER);
+	}
 
-    @Override
-    public BookDetail getBookDetails(String title, String writingGroup) throws SQLException {
-        Book book = getBook(title, writingGroup);
-        
-        if (book == null) {
-            return null;
-        }
-        
-        Publisher pub = getPublisher(book.publisherName);
-        WritingGroup wg = getWritingGroup(writingGroup);
-        
-        if (pub == null || wg == null) {
-            return null;
-        }
-        
-        return new BookDetail(book, pub, wg);
-    }
+	@Override
+	public List<String> listBookTitles() throws SQLException {
+		Statement stmt = this.con.createStatement();
+		List<String> titles = new LinkedList<>();
+		ResultSet results = stmt.executeQuery(SQL_GET_TITLES);
 
-    @Override
-    public BookDetail getBookDetails(BookKeyData key) throws SQLException {
-        return getBookDetails(key.bookTitle, key.writingGroup);
-    }
+		while (results.next()) {
+			titles.add(results.getString(1));
+		}
 
-    @Override
-    public void insertBook(Book book) throws SQLIntegrityConstraintViolationException, SQLException {
-        if (!checkYearString(book.yearPublished)) throw new IllegalArgumentException("Book yearPublished is inproperly formatted");
-        this.PSTMT_INSERT_BOOK.setString(1, book.groupName);
-        this.PSTMT_INSERT_BOOK.setString(2, book.bookTitle);
-        this.PSTMT_INSERT_BOOK.setString(3, book.publisherName);
-        this.PSTMT_INSERT_BOOK.setString(4, book.yearPublished);
-        this.PSTMT_INSERT_BOOK.setInt(5, book.numberPages);
-        
-        PSTMT_INSERT_BOOK.executeUpdate();
-    }
+		results.close();
+		stmt.close();
 
-    @Override
-    public void replacePublisher(String oldName, String newName) throws SQLIntegrityConstraintViolationException, SQLException {
-        this.PSTMT_UPDATE_PUBLISHERS.setString(1, newName);
-        this.PSTMT_UPDATE_PUBLISHERS.setString(2, oldName);
-        
-        this.PSTMT_UPDATE_PUBLISHERS.executeUpdate();
-    }
+		return titles;
+	}
 
-    @Override
-    public void deleteBook(String title, String writingGroup) throws SQLException {
-        this.PSTMT_DELETE_BOOK.setString(1, title);
-        this.PSTMT_DELETE_BOOK.setString(2, writingGroup);
-        this.PSTMT_DELETE_BOOK.executeUpdate();
-    }
+	@Override
+	public List<Book> listBooks() throws SQLException {
+		Statement stmt = this.con.createStatement();
+		List<Book> books = new LinkedList<>();
+		ResultSet results = stmt.executeQuery(SQL_GET_BOOKS);
 
-    @Override
-    public void deleteBook(BookKeyData key) throws SQLException {
-        deleteBook(key.bookTitle, key.writingGroup);
-    }
+		while (results.next()) {
+			books.add(new Book(results.getString(2), results.getString(1), results.getString(3), results.getString(4),
+					results.getInt(5)));
+		}
 
-    @Override
-    public List<String> listPublisherNames() throws SQLException {
-        Statement stmt = this.con.createStatement();
-        List<String> pubs = new LinkedList<>();
-        ResultSet results = stmt.executeQuery(SQL_GET_PUBLISHER_NAMES);
-        
-        while (results.next()) {
-            pubs.add(results.getString(1));
-        }
-        
-        results.close();
-        stmt.close();
-        
-        return pubs;
-    }
+		results.close();
+		stmt.close();
 
-    @Override
-    public List<Publisher> listPublishers() throws SQLException {
-        Statement stmt = this.con.createStatement();
-        List<Publisher> pubs = new LinkedList<>();
-        ResultSet results = stmt.executeQuery(SQL_GET_PUBLISHERS);
-        
-        while (results.next()) pubs.add(new Publisher(
-                results.getString(1), results.getString(2), results.getString(3),
-                results.getString(4)));
-        
-        return pubs;
-    }
+		return books;
+	}
 
-    @Override
-    public Publisher getPublisher(String name) throws SQLException {
-        this.PSTMT_GET_PUBLISHER.setString(1, name);
-        ResultSet results = this.PSTMT_GET_PUBLISHER.executeQuery();
-        
-        if (results.next()) {
-            
-            
-        } else {
-            return null;
-        }
-    }
+	@Override
+	public Book getBook(String title, String writingGroup) throws SQLException {
+		this.PSTMT_GET_BOOK.setString(1, title);
+		this.PSTMT_GET_BOOK.setString(2, writingGroup);
+		ResultSet results = this.PSTMT_GET_BOOK.executeQuery();
 
-    @Override
-    public void insertPublisher(Publisher info) throws SQLIntegrityConstraintViolationException, SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+		if (results.next()) {
+			Book book = new Book(results.getString(2), results.getString(1), results.getString(3), results.getString(4),
+					results.getInt(5));
+			results.close();
+			return book;
 
-    @Override
-    public List<String> listWritingGroupNames() throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+		} else {
+			results.close();
+			return null;
+		}
+	}
 
-    @Override
-    public List<WritingGroup> listWritingGroups() throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+	@Override
+	public Book getBook(BookKeyData key) throws SQLException {
+		return getBook(key.bookTitle, key.writingGroup);
+	}
 
-    @Override
-    public WritingGroup getWritingGroup(String name) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+	@Override
+	public BookDetail getBookDetails(String title, String writingGroup) throws SQLException {
+		Book book = getBook(title, writingGroup);
 
-    @Override
-    public void insertWritingGroup(WritingGroup group) throws SQLIntegrityConstraintViolationException, SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+		if (book == null) {
+			return null;
+		}
 
-    @Override
-    public void deleteWritingGroup(String groupName) throws SQLIntegrityConstraintViolationException, SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+		Publisher pub = getPublisher(book.publisherName);
+		WritingGroup wg = getWritingGroup(writingGroup);
 
-    /**
-     * Checks the given string is a valid year string, that is, exactly 4 
-     * characters in length, all of which are digits.
-     * 
-     * @param year the string to check
-     * @return is year valid
-     */
-    public static boolean checkYearString(String year) {
-        if (year.length() > 4) return false;
-        for (int i = 0; i < year.length(); i++) {
-            if (!Character.isDigit(year.charAt(i))) return false;
-        }
-        
-        return true;
-    }
-    
+		if (pub == null || wg == null) {
+			return null;
+		}
+
+		return new BookDetail(book, pub, wg);
+	}
+
+	@Override
+	public BookDetail getBookDetails(BookKeyData key) throws SQLException {
+		return getBookDetails(key.bookTitle, key.writingGroup);
+	}
+
+	@Override
+	public void insertBook(Book book) throws SQLIntegrityConstraintViolationException, SQLException {
+		if (!checkYearString(book.yearPublished))
+			throw new IllegalArgumentException("Book yearPublished is inproperly formatted");
+		this.PSTMT_INSERT_BOOK.setString(1, book.groupName);
+		this.PSTMT_INSERT_BOOK.setString(2, book.bookTitle);
+		this.PSTMT_INSERT_BOOK.setString(3, book.publisherName);
+		this.PSTMT_INSERT_BOOK.setString(4, book.yearPublished);
+		this.PSTMT_INSERT_BOOK.setInt(5, book.numberPages);
+
+		PSTMT_INSERT_BOOK.executeUpdate();
+	}
+
+	@Override
+	public void replacePublisher(String oldName, String newName)
+			throws SQLIntegrityConstraintViolationException, SQLException {
+		this.PSTMT_UPDATE_PUBLISHERS.setString(1, newName);
+		this.PSTMT_UPDATE_PUBLISHERS.setString(2, oldName);
+
+		this.PSTMT_UPDATE_PUBLISHERS.executeUpdate();
+	}
+
+	@Override
+	public void deleteBook(String title, String writingGroup) throws SQLException {
+		this.PSTMT_DELETE_BOOK.setString(1, title);
+		this.PSTMT_DELETE_BOOK.setString(2, writingGroup);
+		this.PSTMT_DELETE_BOOK.executeUpdate();
+	}
+
+	@Override
+	public void deleteBook(BookKeyData key) throws SQLException {
+		deleteBook(key.bookTitle, key.writingGroup);
+	}
+
+	@Override
+	public List<String> listPublisherNames() throws SQLException {
+		Statement stmt = this.con.createStatement();
+		List<String> pubs = new LinkedList<>();
+		ResultSet results = stmt.executeQuery(SQL_GET_PUBLISHER_NAMES);
+
+		while (results.next()) {
+			pubs.add(results.getString(1));
+		}
+
+		results.close();
+		stmt.close();
+
+		return pubs;
+	}
+
+	@Override
+	public List<Publisher> listPublishers() throws SQLException {
+		Statement stmt = this.con.createStatement();
+		List<Publisher> pubs = new LinkedList<>();
+		ResultSet results = stmt.executeQuery(SQL_GET_PUBLISHERS);
+
+		while (results.next())
+			pubs.add(new Publisher(results.getString(1), results.getString(2), results.getString(3),
+					results.getString(4)));
+
+		return pubs;
+	}
+
+	@Override
+	public Publisher getPublisher(String name) throws SQLException {
+		this.PSTMT_GET_PUBLISHER.setString(1, name);
+		ResultSet results = this.PSTMT_GET_PUBLISHER.executeQuery();
+
+		if (results.next()) {
+
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public void insertPublisher(Publisher info) throws SQLIntegrityConstraintViolationException, SQLException {
+		throw new UnsupportedOperationException("Not supported yet."); // To
+																		// change
+																		// body
+																		// of
+																		// generated
+																		// methods,
+																		// choose
+																		// Tools
+																		// |
+																		// Templates.
+	}
+
+	@Override
+	public List<String> listWritingGroupNames() throws SQLException {
+		throw new UnsupportedOperationException("Not supported yet."); // To
+																		// change
+																		// body
+																		// of
+																		// generated
+																		// methods,
+																		// choose
+																		// Tools
+																		// |
+																		// Templates.
+	}
+
+	@Override
+	public List<WritingGroup> listWritingGroups() throws SQLException {
+		throw new UnsupportedOperationException("Not supported yet."); // To
+																		// change
+																		// body
+																		// of
+																		// generated
+																		// methods,
+																		// choose
+																		// Tools
+																		// |
+																		// Templates.
+	}
+
+	@Override
+	public WritingGroup getWritingGroup(String name) throws SQLException {
+		throw new UnsupportedOperationException("Not supported yet."); // To
+																		// change
+																		// body
+																		// of
+																		// generated
+																		// methods,
+																		// choose
+																		// Tools
+																		// |
+																		// Templates.
+	}
+
+	@Override
+	public void insertWritingGroup(WritingGroup group) throws SQLIntegrityConstraintViolationException, SQLException {
+		throw new UnsupportedOperationException("Not supported yet."); // To
+																		// change
+																		// body
+																		// of
+																		// generated
+																		// methods,
+																		// choose
+																		// Tools
+																		// |
+																		// Templates.
+	}
+
+	@Override
+	public void deleteWritingGroup(String groupName) throws SQLIntegrityConstraintViolationException, SQLException {
+		throw new UnsupportedOperationException("Not supported yet."); // To
+																		// change
+																		// body
+																		// of
+																		// generated
+																		// methods,
+																		// choose
+																		// Tools
+																		// |
+																		// Templates.
+	}
+
+	/**
+	 * Checks the given string is a valid year string, that is, exactly 4
+	 * characters in length, all of which are digits.
+	 * 
+	 * @param year the string to check
+	 * @return is year valid
+	 */
+	public static boolean checkYearString(String year) {
+		if (year.length() > 4)
+			return false;
+		for (int i = 0; i < year.length(); i++) {
+			if (!Character.isDigit(year.charAt(i)))
+				return false;
+		}
+
+		return true;
+	}
+
 }
