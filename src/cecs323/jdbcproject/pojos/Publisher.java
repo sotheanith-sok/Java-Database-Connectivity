@@ -34,4 +34,20 @@ public class Publisher {
      * Must be no more than 50 characters in length.
      */
     public String publisherEmail;
+    
+    /**
+     * Creates a new Publisher object with the given name, address, phone 
+     * number, and email address.
+     * 
+     * @param name the name of the publisher
+     * @param address the address of the publisher
+     * @param phone the phone number of the publisher
+     * @param email the email address of the publisher
+     */
+    public Publisher(String name, String address, String phone, String email) {
+        this.publisherName = name;
+        this.publisherAddress = address;
+        this.publisherPhone = phone;
+        this.publisherEmail = email;
+    }
 }
