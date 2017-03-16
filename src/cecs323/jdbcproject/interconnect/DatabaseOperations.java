@@ -143,6 +143,15 @@ public interface DatabaseOperations {
 	 */
 	public void insertPublisher(Publisher info) throws SQLIntegrityConstraintViolationException, SQLException;
 
+        /**
+         * Deletes the Publisher with the given name from the publishers table.
+         * 
+         * @param name the name of the publisher to delete
+         * @throws SQLIntegrityConstraintViolationException if there is a Book dependent on the named publisher
+         * @throws SQLException if there is a problem deleting the publisher
+         */
+        public void deletePublisher(String name) throws SQLIntegrityConstraintViolationException, SQLException;
+        
 	/**
 	 * Returns a {@link List} of Strings, containing the names of all of the
 	 * WritingGroups in the WritingGroups table.
