@@ -19,7 +19,7 @@ public interface BookOperations {
      * 
      * @return list of book titles
      */
-    public List<String> listBookTitles();
+    public List<String> listBookTitles() throws SQLException;
     
     /**
      * Returns a {@link List} of {@link Book}s, containing all of the 
@@ -27,7 +27,7 @@ public interface BookOperations {
      * 
      * @return list of all books
      */
-    public List<Book> listBooks();
+    public List<Book> listBooks() throws SQLException;
     
     /**
      * Returns a {@link Book} storing all of the data pertaining to the
@@ -38,7 +38,7 @@ public interface BookOperations {
      * @param writingGroup the writing group that wrote the book to fetch
      * @return book info
      */
-    public Book getBook(String title, String writingGroup);
+    public Book getBook(String title, String writingGroup) throws SQLException;
     
     /**
      * Returns a {@link Book} storing all of the data pertaining to the
@@ -47,7 +47,7 @@ public interface BookOperations {
      * @param key the key data of the book to fetch
      * @return book info
      */
-    public Book getBook(BookKeyData key);
+    public Book getBook(BookKeyData key) throws SQLException;
     
     /**
      * Returns a {@link BookDetail} object, containing all available data 
@@ -58,7 +58,7 @@ public interface BookOperations {
      * @param writingGroup the writing group name of the book to fetch
      * @return book details
      */
-    public BookDetail getBookDetails(String title, String writingGroup);
+    public BookDetail getBookDetails(String title, String writingGroup) throws SQLException;
     
     /**
      * Returns a {@link BookDetail} object, storing all of the data pertaining
@@ -68,7 +68,7 @@ public interface BookOperations {
      * @param key the key of the book to fetch
      * @return book details
      */
-    public BookDetail getBookDetails(BookKeyData key);
+    public BookDetail getBookDetails(BookKeyData key) throws SQLException;
     
     /**
      * Inserts the given book into the books table.

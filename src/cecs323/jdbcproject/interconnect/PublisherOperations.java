@@ -17,7 +17,7 @@ public interface PublisherOperations {
      * 
      * @return list of publisher names
      */
-    public List<String> listPublisherNames();
+    public List<String> listPublisherNames() throws SQLException;
     
     /**
      * Returns a {@link List} of {@link Publisher}s, representing all of the
@@ -25,7 +25,7 @@ public interface PublisherOperations {
      * 
      * @return list of publishers
      */
-    public List<Publisher> listPublishers();
+    public List<Publisher> listPublishers() throws SQLException;
     
     /**
      * Returns a {@link Publisher} object, storing all the data stored for the
@@ -34,7 +34,7 @@ public interface PublisherOperations {
      * @param name the name of the publisher to fetch
      * @return publisher info
      */
-    public Publisher getPublisher(String name);
+    public Publisher getPublisher(String name) throws SQLException;
     
     /**
      * Inserts a new entry into the Publishers table, using the given

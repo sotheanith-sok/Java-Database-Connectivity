@@ -17,7 +17,7 @@ public interface WritingGroupOperations {
      * 
      * @return list of writing groups' names
      */
-    public List<String> listWritingGroupNames();
+    public List<String> listWritingGroupNames() throws SQLException;
     
     /**
      * Returns a {@link List} of {@link WritingGroup}s, representing all of the
@@ -25,7 +25,7 @@ public interface WritingGroupOperations {
      * 
      * @return list of WritingGroups
      */
-    public List<WritingGroup> listWritingGroups();
+    public List<WritingGroup> listWritingGroups() throws SQLException;
     
     /**
      * Returns a {@link WritingGroup} object containing the data stored in the
@@ -36,7 +36,7 @@ public interface WritingGroupOperations {
      * @throws NullPointerException if there is no entry in the writing groups
      * table with the given name.
      */
-    public WritingGroup getWritingGroup(String name);
+    public WritingGroup getWritingGroup(String name) throws SQLException;
     
     /**
      * Inserts a row in the WritingGroups table with the attribute values stored
