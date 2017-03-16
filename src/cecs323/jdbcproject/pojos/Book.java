@@ -44,4 +44,20 @@ public class Book {
      * The number of pages in this Book.
      */
     public int numberPages;
+    
+    /**
+     * Creates a new Book object with the given values.
+     * 
+     * @param title the title of the book
+     * @param groupName the name of the WritingGroup that wrote this book
+     * @param pubName the name of the publisher that published this book
+     * @param year the year that this book was published
+     * @param pages the number of pages in this book
+     */
+    public Book(String title, String groupName, String pubName, String year, int pages) {
+        this.bookTitle = title;
+        this.groupName = groupName;
+        this.publisherName = pubName;
+        this.numberPages = pages;
+    }
 }
