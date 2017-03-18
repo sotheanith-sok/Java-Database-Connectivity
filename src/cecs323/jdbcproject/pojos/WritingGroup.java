@@ -34,4 +34,20 @@ public class WritingGroup {
 	 * Must be no more than 50 characters in length.
 	 */
 	public String subject;
+        
+        /**
+         * Creates a new WritingGroup object with the given name, head writer,
+         * year and subject.
+         * 
+         * @param name the name of the writing group
+         * @param head the head writer of the writing group
+         * @param year the year in which the group formed
+         * @param subj the subject that the group writes about
+         */
+        public WritingGroup(String name, String head, String year, String subj) {
+            this.groupName = name;
+            this.headWriter = head;
+            this.yearFormed = year;
+            this.subject = subj;
+        }
 }
