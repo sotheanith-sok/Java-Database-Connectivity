@@ -5,6 +5,7 @@
         <group>
             <file>file:/D:/Workstation/CECS323-JDBCProject/src/cecs323/jdbcproject/CECS323JDBCProject.java</file>
             <file>file:/D:/Workstation/CECS323-JDBCProject/src/impl/OpsImplFactory.java</file>
+            <file>file:/D:/Workstation/CECS323-JDBCProject/src/cecs323/jdbcproject/interconnect/DatabaseOperations.java</file>
         </group>
     </open-files>
 </project-private>

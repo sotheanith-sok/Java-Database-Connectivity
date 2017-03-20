@@ -8,6 +8,8 @@ import java.util.*;
 import cecs323.jdbcproject.interconnect.*;
 import cecs323.jdbcproject.pojos.*;
 import impl.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <h1>CECS323JDBCProject</h1> This is program is designed to be operate in
@@ -172,14 +174,20 @@ public class CECS323JDBCProject {
 	 * @throws SQLException
 	 */
 	public static void listDataForAWritingGroup(DatabaseOperations w, Scanner in) {
-		try {
-			int i = printDataAndGetInput(w, in, 1);
-			List<WritingGroup> list = w.listWritingGroups();
+            try {   
+            List<String> list=w.listWritingGroupNames();
+            System.out.println("-Available Group-");
+            for (int i=0; i<list.size();i++) {
+            	System.out.println(list.get(i));
+            }
+            System.out.print("Enter group name: ");
+            String groupName=in.nextLine();
 			System.out.printf("%-10s%-10s%-10s%-10s\n", "GroupName", "HeadWriter", "YearFormed", "Subject");
-			System.out.printf("%-10s%-10s%-10s%-10s\n", list.get(i).groupName, list.get(i).headWriter,
-					list.get(i).subject, list.get(i).yearFormed);
+			WritingGroup k=w.getWritingGroup(groupName);
+			System.out.printf("%-10s%-10s%-10s%-10s\n", k.groupName,k.headWriter,k.yearFormed,k.subject);
 		} catch (SQLException s) {
 			System.out.println("Error: Code 2");
+                        Logger.getLogger(CECS323JDBCProject.class.getName()).log(Level.SEVERE, null, s);
 		}
 
 	}
@@ -202,6 +210,32 @@ public class CECS323JDBCProject {
 		} catch (SQLException s) {
 			System.out.println("Error: Code 3");
 		}
+	}
+
+	/**
+	 * Print all data for a publisher
+	 * 
+	 * @param d DatabaseOperations object
+	 */
+	public static void printDataForAPublisher(DatabaseOperations d, Scanner in) {
+		try {
+			List<String> list=d.listPublisherNames();
+			System.out.println("-Available Publishers-");
+			for (int i=0; i<list.size();i++) {
+				System.out.println(list.get(i));
+			}
+			System.out.print("Enter publisher name: ");
+	        String pubName=in.nextLine();
+			Publisher p=d.getPublisher(pubName);
+			System.out.printf("%-10s%-10s%-10s%-10s\n", "PublisherName", "PublisherAddress", "PublisherPhone",
+					"PublisherEmail");
+			System.out.printf("%-10s%-10s%-10s%-10s\n", p.publisherName, p.publisherAddress,
+					p.publisherPhone, p.publisherEmail);
+			
+		} catch (SQLException e) {
+			System.out.println("Error: Code 9");
+		}
+		
 	}
 
 	/**
@@ -234,11 +268,11 @@ public class CECS323JDBCProject {
 	public static void listDataForABook(DatabaseOperations b, Scanner in) {
 		try {
 			System.out.print("Enter GroupName:");
-			String GroupName = in.nextLine();
+			String groupName = in.nextLine();
 			System.out.print("Enter BookTitle: ");
-			String BookTitle = in.nextLine();
-			Book book = b.getBook(new BookKeyData(BookTitle, GroupName));
-			BookDetail bookDetail = b.getBookDetails(new BookKeyData(BookTitle, GroupName));
+			String bookTitle = in.nextLine();
+			Book book = b.getBook(new BookKeyData(bookTitle, groupName));
+			BookDetail bookDetail = b.getBookDetails(new BookKeyData(bookTitle, groupName));
 			System.out.printf("%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s\n", "BookTitle", "YearPublished",
 					"NumberPages", "GroupName", "HeadWriter", "YearFormed", "Subject", "PublisherName",
 					"PublisherAddress", "PublisherPhone", "PublisherEmail");
@@ -327,62 +361,6 @@ public class CECS323JDBCProject {
 		} catch (SQLException s) {
 			System.out.println("Error: Code 8");
 		}
-
-	}
-
-	/**
-	 * Print option for user to choose
-	 * 
-	 * @param o Object of types: BookOperations, PublisherOperations, or
-	 *            WritingGroupOperations.
-	 * @param in Scanner from keyboard
-	 * @return user choice
-	 * @throws SQLException
-	 */
-	public static int printDataAndGetInput(Object o, Scanner in, int k) {
-		int choice = -1;
-		try {
-			List<String> list;
-			boolean done = false;
-			// Get the list
-			if (k == 1) {
-				list = ((DatabaseOperations) o).listWritingGroupNames();
-			} else {
-				list = ((DatabaseOperations) o).listPublisherNames();
-			}
-
-			// Print the list
-			for (int i = 0; i < list.size(); i++) {
-				System.out.println((i + 1) + " . " + list.get(i));
-			}
-
-			while (!done) {
-				try {
-					choice = in.nextInt();
-					if (!(choice >= 1 && choice <= list.size())) {
-						throw new NumberFormatException();
-					}
-					done = true;
-				} catch (InputMismatchException ime) {
-					in.next();
-					System.out.print("Invalid Input. Re-enter: ");
-				} catch (NumberFormatException nfe) {
-					System.out.print("Invalid Input. Re-enter: ");
-				}
-			}
-		} catch (SQLException s) {
-			System.out.println("Error: Code 2");
-		}
-
-		return choice - 1;
-	}
-
-	/**
-	 * Print all data for a publisher
-	 * 
-	 * @param d DatabaseOperations object
-	 */
-	public static void printDataForAPublisher(DatabaseOperations d, Scanner in) {
 
 	}
 }
