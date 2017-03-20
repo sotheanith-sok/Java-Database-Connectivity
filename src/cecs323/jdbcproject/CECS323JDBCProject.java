@@ -23,9 +23,9 @@ public class CECS323JDBCProject {
 		// TODO code application logic here
 		Scanner in = new Scanner(System.in);
 		// Input data if required
-		String DBNAME = "";
-		String USER = "";
-		String PASS = "";
+		String DBNAME = "JDBCProjectDatabase";
+		String USER = "IAmNotARobot";
+		String PASS = "IAmNotARobot";
 
 		// Database URL
 		String DB_URL = "jdbc:derby://localhost:1527/" + DBNAME + ";user=" + USER + ";password=" + PASS;
@@ -153,9 +153,9 @@ public class CECS323JDBCProject {
 	public static void listAllWritingGroups(DatabaseOperations w) {
 		try {
 			List<WritingGroup> list = w.listWritingGroups();
-			System.out.printf("%-10s%-10s%-10s%-10s", "GroupName", "HeadWriter", "YearFormed", "Subject");
+			System.out.printf("%-10s%-10s%-10s%-10s\n", "GroupName", "HeadWriter", "YearFormed", "Subject");
 			for (int i = 0; i < list.size(); i++) {
-				System.out.printf("%-10s%-10s%-10s%-10s", list.get(i).groupName, list.get(i).headWriter,
+				System.out.printf("%-10s%-10s%-10s%-10s\n", list.get(i).groupName, list.get(i).headWriter,
 						list.get(i).subject, list.get(i).yearFormed);
 			}
 		} catch (SQLException s) {
@@ -175,8 +175,8 @@ public class CECS323JDBCProject {
 		try {
 			int i = printDataAndGetInput(w, in, 1);
 			List<WritingGroup> list = w.listWritingGroups();
-			System.out.printf("%-10s%-10s%-10s%-10s", "GroupName", "HeadWriter", "YearFormed", "Subject");
-			System.out.printf("%-10s%-10s%-10s%-10s", list.get(i).groupName, list.get(i).headWriter,
+			System.out.printf("%-10s%-10s%-10s%-10s\n", "GroupName", "HeadWriter", "YearFormed", "Subject");
+			System.out.printf("%-10s%-10s%-10s%-10s\n", list.get(i).groupName, list.get(i).headWriter,
 					list.get(i).subject, list.get(i).yearFormed);
 		} catch (SQLException s) {
 			System.out.println("Error: Code 2");
@@ -193,10 +193,10 @@ public class CECS323JDBCProject {
 	public static void listAllPublisher(DatabaseOperations p) {
 		try {
 			List<Publisher> list = p.listPublishers();
-			System.out.printf("%-10s%-10s%-10s%-10s", "PublisherName", "PublisherAddress", "PublisherPhone",
+			System.out.printf("%-10s%-10s%-10s%-10s\n", "PublisherName", "PublisherAddress", "PublisherPhone",
 					"PublisherEmail");
 			for (int i = 0; i < list.size(); i++) {
-				System.out.printf("%-10s%-10s%-10s%-10s", list.get(i).publisherName, list.get(i).publisherAddress,
+				System.out.printf("%-10s%-10s%-10s%-10s\n", list.get(i).publisherName, list.get(i).publisherAddress,
 						list.get(i).publisherPhone, list.get(i).publisherEmail);
 			}
 		} catch (SQLException s) {
@@ -213,9 +213,9 @@ public class CECS323JDBCProject {
 	public static void listAllBookTitle(DatabaseOperations b) {
 		try {
 			List<String> list = b.listBookTitles();
-			System.out.printf("%-10s%", "BookTitle");
+			System.out.printf("%-10s%", "BookTitle\n");
 			for (int i = 0; i < list.size(); i++) {
-				System.out.printf("%-10s", list.get(i));
+				System.out.printf("%-10s\n", list.get(i));
 			}
 		} catch (SQLException s) {
 			System.out.println("Error: Code 4");
@@ -239,10 +239,10 @@ public class CECS323JDBCProject {
 			String BookTitle = in.nextLine();
 			Book book = b.getBook(new BookKeyData(BookTitle, GroupName));
 			BookDetail bookDetail = b.getBookDetails(new BookKeyData(BookTitle, GroupName));
-			System.out.printf("%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s/n", "BookTitle", "YearPublished",
+			System.out.printf("%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s\n", "BookTitle", "YearPublished",
 					"NumberPages", "GroupName", "HeadWriter", "YearFormed", "Subject", "PublisherName",
 					"PublisherAddress", "PublisherPhone", "PublisherEmail");
-			System.out.printf("%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s/n", book.bookTitle,
+			System.out.printf("%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s\n", book.bookTitle,
 					book.yearPublished, book.numberPages, bookDetail.writingGroup.groupName,
 					bookDetail.writingGroup.headWriter, bookDetail.writingGroup.yearFormed,
 					bookDetail.writingGroup.subject, bookDetail.publisher.publisherName,

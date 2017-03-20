@@ -34,11 +34,11 @@ class OpsImpl implements DatabaseOperations {
 
     private static final String SQL_GET_TITLES = "SELECT booktitle FROM books";
     private static final String SQL_GET_BOOKS = "SELECT * FROM books";
-    private static final String SQL_GET_BOOK = "SELECT * FROM books WHERE booktitle=? && groupname=?";
+    private static final String SQL_GET_BOOK = "SELECT * FROM books WHERE booktitle=? AND groupname=?";
     private static final String SQL_INSERT_BOOK = "INSERT INTO books (groupname, booktitle, "
             + "publishername, yearpublished, numberpages) VALUES (?,?,?,?,?)";
     private static final String SQL_UPDATE_PUBLISHERS = "UPDATE books SET publishername=? WHERE publishername=?";
-    private static final String SQL_DELETE_BOOK = "DELETE FROM books WHERE booktitle=? & writinggroup=?";
+    private static final String SQL_DELETE_BOOK = "DELETE FROM books WHERE booktitle=? AND groupname=?";
     private static final String SQL_GET_PUBLISHER_NAMES = "SELECT publishername FROM publishers";
     private static final String SQL_GET_PUBLISHERS = "SELECT * FROM publishers";
     private static final String SQL_GET_PUBLISHER = "SELECT * FROM publishers WHERE publishername=?";
