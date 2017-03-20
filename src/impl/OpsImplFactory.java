@@ -236,13 +236,12 @@ class OpsImpl implements DatabaseOperations {
             return null;
         }
     }
-
     @Override
     public void insertPublisher(Publisher info) throws SQLIntegrityConstraintViolationException, SQLException {
         PSTMT_INSERT_PUBLISHER.setString(1, info.publisherName);
-        PSTMT_INSERT_PUBLISHER.setString(1, info.publisherAddress);
-        PSTMT_INSERT_PUBLISHER.setString(1, info.publisherPhone);
-        PSTMT_INSERT_PUBLISHER.setString(1, info.publisherEmail);
+        PSTMT_INSERT_PUBLISHER.setString(2, info.publisherAddress);
+        PSTMT_INSERT_PUBLISHER.setString(3, info.publisherPhone);
+        PSTMT_INSERT_PUBLISHER.setString(4, info.publisherEmail);
         PSTMT_INSERT_PUBLISHER.execute();
     }
 
@@ -256,7 +255,7 @@ class OpsImpl implements DatabaseOperations {
     public List<String> listWritingGroupNames() throws SQLException {
         Statement stmt = con.createStatement();
         List<String> names = new LinkedList<>();
-        ResultSet results = stmt.executeQuery(SQL_GET_BOOK);
+        ResultSet results = stmt.executeQuery(SQL_GET_GROUP_NAMES);
         
         while (results.next()) {
             names.add(results.getString(1));

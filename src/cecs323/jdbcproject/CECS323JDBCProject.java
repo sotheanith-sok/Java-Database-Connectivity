@@ -25,7 +25,7 @@ public class CECS323JDBCProject {
 		// TODO code application logic here
 		Scanner in = new Scanner(System.in);
 		// Input data if required
-		String DBNAME = "JDBCProjectDatabase";
+		String DBNAME = "IAmNotARobot";
 		String USER = "IAmNotARobot";
 		String PASS = "IAmNotARobot";
 
@@ -52,7 +52,7 @@ public class CECS323JDBCProject {
 					listAllWritingGroups(d);
 					break;
 				case 2:
-					System.out.println("-Listing all the data for a group-");
+					System.out.println("-Listing all data for a writing group-");
 					listDataForAWritingGroup(d, in);
 					break;
 				case 3:
@@ -120,7 +120,7 @@ public class CECS323JDBCProject {
 		int choice = 0;
 		System.out.println("--Menu--");
 		System.out.println("1. List all writing groups ");
-		System.out.println("2. List all the data for a group");
+		System.out.println("2. List all data for a writing group");
 		System.out.println("3. List all publishers");
 		System.out.println("4. List all the data for a publisher");
 		System.out.println("5. List all book titles");
@@ -155,9 +155,9 @@ public class CECS323JDBCProject {
 	public static void listAllWritingGroups(DatabaseOperations w) {
 		try {
 			List<WritingGroup> list = w.listWritingGroups();
-			System.out.printf("%-10s%-10s%-10s%-10s\n", "GroupName", "HeadWriter", "YearFormed", "Subject");
+			System.out.printf("%-20s%-20s%-20s%-20s\n", "GroupName", "HeadWriter", "YearFormed", "Subject");
 			for (int i = 0; i < list.size(); i++) {
-				System.out.printf("%-10s%-10s%-10s%-10s\n", list.get(i).groupName, list.get(i).headWriter,
+				System.out.printf("%-20s%-20s%-20s%-20s\n", list.get(i).groupName, list.get(i).headWriter,
 						list.get(i).subject, list.get(i).yearFormed);
 			}
 		} catch (SQLException s) {
@@ -175,16 +175,16 @@ public class CECS323JDBCProject {
 	 */
 	public static void listDataForAWritingGroup(DatabaseOperations w, Scanner in) {
             try {   
-            List<String> list=w.listWritingGroupNames();
-            System.out.println("-Available Group-");
-            for (int i=0; i<list.size();i++) {
-            	System.out.println(list.get(i));
-            }
-            System.out.print("Enter group name: ");
-            String groupName=in.nextLine();
-			System.out.printf("%-10s%-10s%-10s%-10s\n", "GroupName", "HeadWriter", "YearFormed", "Subject");
+                List<String> list=w.listWritingGroupNames();
+                System.out.println("-Available Group-");
+                for (int i=0; i<list.size();i++) {
+                    System.out.println(list.get(i));
+                }
+                System.out.print("Enter group name: ");
+                String groupName=in.next();
+                System.out.printf("%-20s%-20s%-20s%-20s\n", "GroupName", "HeadWriter", "YearFormed", "Subject");
 			WritingGroup k=w.getWritingGroup(groupName);
-			System.out.printf("%-10s%-10s%-10s%-10s\n", k.groupName,k.headWriter,k.yearFormed,k.subject);
+			System.out.printf("%-20s%-20s%-20s%-20s\n", k.groupName,k.headWriter,k.yearFormed,k.subject);
 		} catch (SQLException s) {
 			System.out.println("Error: Code 2");
                         Logger.getLogger(CECS323JDBCProject.class.getName()).log(Level.SEVERE, null, s);
@@ -201,10 +201,10 @@ public class CECS323JDBCProject {
 	public static void listAllPublisher(DatabaseOperations p) {
 		try {
 			List<Publisher> list = p.listPublishers();
-			System.out.printf("%-10s%-10s%-10s%-10s\n", "PublisherName", "PublisherAddress", "PublisherPhone",
+			System.out.printf("%-20s%-30s%-20s%-20s\n", "PublisherName", "PublisherAddress", "PublisherPhone",
 					"PublisherEmail");
 			for (int i = 0; i < list.size(); i++) {
-				System.out.printf("%-10s%-10s%-10s%-10s\n", list.get(i).publisherName, list.get(i).publisherAddress,
+				System.out.printf("%-20s%-30s%-20s%-20s\n", list.get(i).publisherName, list.get(i).publisherAddress,
 						list.get(i).publisherPhone, list.get(i).publisherEmail);
 			}
 		} catch (SQLException s) {
@@ -225,11 +225,13 @@ public class CECS323JDBCProject {
 				System.out.println(list.get(i));
 			}
 			System.out.print("Enter publisher name: ");
-	        String pubName=in.nextLine();
+                        in.nextLine();
+                        String pubName=in.nextLine();
+                        System.out.println(pubName);
 			Publisher p=d.getPublisher(pubName);
-			System.out.printf("%-10s%-10s%-10s%-10s\n", "PublisherName", "PublisherAddress", "PublisherPhone",
+			System.out.printf("%-20s%-30s%-20s%-20s\n", "PublisherName", "PublisherAddress", "PublisherPhone",
 					"PublisherEmail");
-			System.out.printf("%-10s%-10s%-10s%-10s\n", p.publisherName, p.publisherAddress,
+			System.out.printf("%-20s%-30s%-20s%-20s\n", p.publisherName, p.publisherAddress,
 					p.publisherPhone, p.publisherEmail);
 			
 		} catch (SQLException e) {
@@ -247,7 +249,7 @@ public class CECS323JDBCProject {
 	public static void listAllBookTitle(DatabaseOperations b) {
 		try {
 			List<String> list = b.listBookTitles();
-			System.out.printf("%-10s%", "BookTitle\n");
+			System.out.printf("%-10s", "BookTitle\n");
 			for (int i = 0; i < list.size(); i++) {
 				System.out.printf("%-10s\n", list.get(i));
 			}
@@ -268,15 +270,16 @@ public class CECS323JDBCProject {
 	public static void listDataForABook(DatabaseOperations b, Scanner in) {
 		try {
 			System.out.print("Enter GroupName:");
-			String groupName = in.nextLine();
+                        in.nextLine();
+			String groupName =in.nextLine();
 			System.out.print("Enter BookTitle: ");
 			String bookTitle = in.nextLine();
 			Book book = b.getBook(new BookKeyData(bookTitle, groupName));
 			BookDetail bookDetail = b.getBookDetails(new BookKeyData(bookTitle, groupName));
-			System.out.printf("%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s\n", "BookTitle", "YearPublished",
+			System.out.printf("%-40s%-20s%-20s%-20s%-20s%-20s%-20s%-20s%-30s%-30s%-20s\n", "BookTitle", "YearPublished",
 					"NumberPages", "GroupName", "HeadWriter", "YearFormed", "Subject", "PublisherName",
 					"PublisherAddress", "PublisherPhone", "PublisherEmail");
-			System.out.printf("%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s\n", book.bookTitle,
+			System.out.printf("%-40s%-20s%-20s%-20s%-20s%-20s%-20s%-20s%-30s%-30s%-20s\n", book.bookTitle,
 					book.yearPublished, book.numberPages, bookDetail.writingGroup.groupName,
 					bookDetail.writingGroup.headWriter, bookDetail.writingGroup.yearFormed,
 					bookDetail.writingGroup.subject, bookDetail.publisher.publisherName,
@@ -298,15 +301,17 @@ public class CECS323JDBCProject {
 	 */
 	public static void insertABook(DatabaseOperations d, Scanner in) {
 		try {
-			System.out.print("Enter BookTitle");
+			System.out.print("Enter BookTitle: ");
+                        in.nextLine();
 			String bookTitle = in.nextLine();
-			System.out.print("Enter YearPublished");
+			System.out.print("Enter YearPublished: ");
 			String yearPublished = in.nextLine();
-			System.out.print("Enter NumberPages");
+			System.out.print("Enter NumberPages: ");
 			int numberPages = in.nextInt();
-			System.out.print("Enter GroupName");
+			System.out.print("Enter GroupName: ");
+                        in.nextLine();
 			String groupName = in.nextLine();
-			System.out.print("Enter PublisherName");
+			System.out.print("Enter PublisherName: ");
 			String publisherName = in.nextLine();
 			d.insertBook(new Book(bookTitle, groupName, publisherName, yearPublished, numberPages));
 		} catch (SQLException s) {
@@ -325,22 +330,24 @@ public class CECS323JDBCProject {
 	 */
 	public static void insertAPublisher(DatabaseOperations d, Scanner in) throws SQLException {
 		try {
-			System.out.println("Enter OldPublisherName:");
+			System.out.print("Enter OldPublisherName: ");
+                        in.nextLine();
 			String oldPub = in.nextLine();
 			System.out.println("-Get New Publisher Info-");
-			System.out.println("Enter PublisherName");
+			System.out.print("Enter PublisherName: ");
 			String publisherName = in.nextLine();
-			System.out.println("Enter PublisherAddress");
+			System.out.print("Enter PublisherAddress: ");
 			String publisherAddress = in.nextLine();
-			System.out.println("Enter PublisherPhone");
+			System.out.print("Enter PublisherPhone: ");
 			String publisherPhone = in.nextLine();
-			System.out.println("Enter PublisherEmail");
-			String publisherEmail = in.nextLine();
+			System.out.print("Enter PublisherEmail: ");
+                        String publisherEmail = in.nextLine();
 			d.insertPublisher(new Publisher(publisherName, publisherAddress, publisherPhone, publisherEmail));
 			d.replacePublisher(oldPub, publisherName);
 			d.deletePublisher(oldPub);
 		} catch (SQLException s) {
-			System.out.println("Error: Code 7");
+                    System.out.println(s);
+                    System.out.println("Error: Code 7");
 		}
 	}
 
@@ -353,9 +360,10 @@ public class CECS323JDBCProject {
 	 */
 	public static void removeABook(DatabaseOperations d, Scanner in) {
 		try {
-			System.out.print("Enter BookTitle");
+			System.out.print("Enter BookTitle: ");
+                        in.nextLine();
 			String bookTitle = in.nextLine();
-			System.out.print("Enter GroupName");
+			System.out.print("Enter GroupName: ");
 			String groupName = in.nextLine();
 			d.deleteBook(new BookKeyData(bookTitle, groupName));
 		} catch (SQLException s) {

@@ -2,7 +2,7 @@ CREATE TABLE publishers(
 	publishername VARCHAR(40) NOT NULL,
 	publisheraddress VARCHAR(40),
 	publisherphone VARCHAR(40),
-	publishemail VARCHAR(40),
+	publisheremail VARCHAR(40),
 	CONSTRAINT publisher_pk PRIMARY KEY (publishername)	
 );
 CREATE TABLE writinggroups(
@@ -23,7 +23,7 @@ CREATE TABLE books(
 	CONSTRAINT writinggroup_books_FK FOREIGN KEY (groupname) REFERENCES writinggroups(groupname)
 );
 --INSERT VALUE IN publishers--
-INSERT INTO publishers (publishername, publisheraddress, publisherphone, publishemail) VALUES
+INSERT INTO publishers (publishername, publisheraddress, publisherphone, publisheremail) VALUES
 ('Apple Inc.','New York, New York','617501426','apple@live.com'),
 ('Orange Inc.','Cape Town, South Africa','901524395','orange@hotmail.com'),
 ('Mango Inc.','Tokyo, Japan','444370190','mango@gmail.com');
