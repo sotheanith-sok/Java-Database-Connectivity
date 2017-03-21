@@ -166,7 +166,7 @@ public class CECS323JDBCProject {
 				throw new SQLException();
 			}
 			// Print WritingGroups.
-			System.out.printf("%-20s%-20s%-20s%-20s\n", "GroupName", "HeadWriter", "YearFormed", "Subject");
+			System.out.printf("%-20s%-20s%-20s%-20s\n", "GroupName", "HeadWriter", "Subject", "YearFormed");
 			for (int i = 0; i < list.size(); i++) {
 				System.out.printf("%-20s%-20s%-20s%-20s\n", list.get(i).groupName, list.get(i).headWriter,
 						list.get(i).subject, list.get(i).yearFormed);
