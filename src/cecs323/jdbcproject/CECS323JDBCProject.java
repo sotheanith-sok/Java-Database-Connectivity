@@ -174,7 +174,6 @@ public class CECS323JDBCProject {
 		} catch (SQLException s) {
 			System.out.println("ERROR: WritingGroups is empty.");
 		}
-
 	}
 
 	/**
@@ -210,7 +209,6 @@ public class CECS323JDBCProject {
 		} catch (NullPointerException np) {
 			System.out.println("ERROR: WritingGroup was not found.");
 		}
-
 	}
 
 	/**
@@ -338,7 +336,6 @@ public class CECS323JDBCProject {
 		} catch (NullPointerException np) {
 			System.out.println("ERROR: Book was not found.");
 		}
-
 	}
 
 	/**
@@ -387,7 +384,6 @@ public class CECS323JDBCProject {
 		} catch (InputMismatchException im) {
 			System.out.println("ERROR: NumberPages should be integer. Insertion Fail!!!");
 		}
-
 	}
 
 	/**
@@ -469,7 +465,6 @@ public class CECS323JDBCProject {
 		} catch (NullPointerException iie) {
 			System.out.println("ERROR: Book doesn't not existed in the database.");
 		}
-
 	}
 
 	/**
@@ -487,6 +482,5 @@ public class CECS323JDBCProject {
 		for (int i = 0; i < list.size(); i++) {
 			System.out.printf("%-40s%-10s\n", list.get(i).bookTitle, list.get(i).groupName);
 		}
-
 	}
 }
