@@ -95,17 +95,20 @@ public class CECS323JDBCProject {
 			// Close resource when there isn't any error.
 			conn.close();
 		} catch (SQLException se) {
-			se.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+                        System.out.println("ERROR: Connection to Database failed!!!");
+		} catch (InputMismatchException e) {
+                    System.out.println("Error 2");
 		} finally {
 			// Error then need to close resources.
 			try {
 				conn.close();
 				in.close();
 			} catch (SQLException se) {
-				se.printStackTrace();
-			}
+                            System.out.println("H3");
+                            se.printStackTrace();
+			} catch (NullPointerException np){
+                            System.out.println("ERROR: Database related informations are incorrect.");
+                        }
 		}
 	}
 
@@ -155,13 +158,16 @@ public class CECS323JDBCProject {
 	public static void listAllWritingGroups(DatabaseOperations w) {
 		try {
 			List<WritingGroup> list = w.listWritingGroups();
+                        if (list.size()==0){
+                            throw new SQLException ();
+                        }
 			System.out.printf("%-20s%-20s%-20s%-20s\n", "GroupName", "HeadWriter", "YearFormed", "Subject");
 			for (int i = 0; i < list.size(); i++) {
 				System.out.printf("%-20s%-20s%-20s%-20s\n", list.get(i).groupName, list.get(i).headWriter,
 						list.get(i).subject, list.get(i).yearFormed);
 			}
 		} catch (SQLException s) {
-			System.out.println("Error: Code 1");
+			System.out.println("ERROR: WritingGroups is empty.");
 		}
 
 	}
@@ -182,12 +188,11 @@ public class CECS323JDBCProject {
                 }
                 System.out.print("Enter group name: ");
                 String groupName=in.next();
+                WritingGroup k=w.getWritingGroup(groupName);
                 System.out.printf("%-20s%-20s%-20s%-20s\n", "GroupName", "HeadWriter", "YearFormed", "Subject");
-			WritingGroup k=w.getWritingGroup(groupName);
 			System.out.printf("%-20s%-20s%-20s%-20s\n", k.groupName,k.headWriter,k.yearFormed,k.subject);
 		} catch (SQLException s) {
-			System.out.println("Error: Code 2");
-                        Logger.getLogger(CECS323JDBCProject.class.getName()).log(Level.SEVERE, null, s);
+			System.out.println("ERROR: WritingGroup can't be found.");
 		}
 
 	}
