@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * conjunction with a database of books, publisher, and writing group.
  *
  * @author Sotheanith Sok
- * @version 1.0
+ * @version 1.5
  * @since 03-16-2017
  */
 public class CECS323JDBCProject {
@@ -25,7 +25,7 @@ public class CECS323JDBCProject {
 		// TODO code application logic here
 		Scanner in = new Scanner(System.in);
 		// Input data if required
-		String DBNAME = "IAmNotARobot";
+		String DBNAME = "JDBCProjectDatabase";
 		String USER = "IAmNotARobot";
 		String PASS = "IAmNotARobot";
 
@@ -37,7 +37,6 @@ public class CECS323JDBCProject {
 		try {
 			// Register JDBC driver
 			Class.forName("org.apache.derby.jdbc.ClientDriver").newInstance();
-
 			// Open Connection
 			System.out.println("Connecting to database...");
 			conn = DriverManager.getConnection(DB_URL);
@@ -95,20 +94,23 @@ public class CECS323JDBCProject {
 			// Close resource when there isn't any error.
 			conn.close();
 		} catch (SQLException se) {
-                        System.out.println("ERROR: Connection to Database failed!!!");
-		} catch (InputMismatchException e) {
-                    System.out.println("Error 2");
+			System.out.println("ERROR: Connection to Database failed!!!");
+		} catch (Exception e) {
+			// Testing for unexpected exception.
+			System.out.println("Unknown Exception was threw to main");
+			System.out.println(e);
 		} finally {
-			// Error then need to close resources.
+			// Error caused by closing resources.
 			try {
 				conn.close();
 				in.close();
 			} catch (SQLException se) {
-                            System.out.println("H3");
-                            se.printStackTrace();
-			} catch (NullPointerException np){
-                            System.out.println("ERROR: Database related informations are incorrect.");
-                        }
+				System.out.println("H3");
+				se.printStackTrace();
+				// This error is mostly caused by wrong database info.
+			} catch (NullPointerException np) {
+				System.out.println("ERROR: Database related informations are incorrect.");
+			}
 		}
 	}
 
@@ -134,6 +136,7 @@ public class CECS323JDBCProject {
 		System.out.println("10. Exit");
 		while (!done) {
 			try {
+				System.out.print("Enter: ");
 				choice = in.nextInt();
 				if (!(choice >= 1 && choice <= 10)) {
 					throw new NumberFormatException();
@@ -158,9 +161,11 @@ public class CECS323JDBCProject {
 	public static void listAllWritingGroups(DatabaseOperations w) {
 		try {
 			List<WritingGroup> list = w.listWritingGroups();
-                        if (list.size()==0){
-                            throw new SQLException ();
-                        }
+			// Check if WritingGroups is empty.
+			if (list.size() == 0) {
+				throw new SQLException();
+			}
+			// Print WritingGroups.
 			System.out.printf("%-20s%-20s%-20s%-20s\n", "GroupName", "HeadWriter", "YearFormed", "Subject");
 			for (int i = 0; i < list.size(); i++) {
 				System.out.printf("%-20s%-20s%-20s%-20s\n", list.get(i).groupName, list.get(i).headWriter,
@@ -180,19 +185,30 @@ public class CECS323JDBCProject {
 	 * @throws SQLException
 	 */
 	public static void listDataForAWritingGroup(DatabaseOperations w, Scanner in) {
-            try {   
-                List<String> list=w.listWritingGroupNames();
-                System.out.println("-Available Group-");
-                for (int i=0; i<list.size();i++) {
-                    System.out.println(list.get(i));
-                }
-                System.out.print("Enter group name: ");
-                String groupName=in.next();
-                WritingGroup k=w.getWritingGroup(groupName);
-                System.out.printf("%-20s%-20s%-20s%-20s\n", "GroupName", "HeadWriter", "YearFormed", "Subject");
-			System.out.printf("%-20s%-20s%-20s%-20s\n", k.groupName,k.headWriter,k.yearFormed,k.subject);
+		try {
+			List<String> list = w.listWritingGroupNames();
+			// Check if WritingGroups is empty.
+			if (list.size() == 0) {
+				throw new SQLException();
+			}
+			// Print available WritingGroups.
+			System.out.println("-Available Group-");
+			for (int i = 0; i < list.size(); i++) {
+				System.out.println(list.get(i));
+			}
+			// Get input.
+			System.out.print("Enter group name: ");
+			String groupName = in.next();
+			WritingGroup k = w.getWritingGroup(groupName);
+			// Print result
+			if (k.groupName != null) {
+				System.out.printf("%-20s%-20s%-20s%-20s\n", "GroupName", "HeadWriter", "YearFormed", "Subject");
+				System.out.printf("%-20s%-20s%-20s%-20s\n", k.groupName, k.headWriter, k.yearFormed, k.subject);
+			}
 		} catch (SQLException s) {
-			System.out.println("ERROR: WritingGroup can't be found.");
+			System.out.println("ERROR: WritingGroups is empty.");
+		} catch (NullPointerException np) {
+			System.out.println("ERROR: WritingGroup was not found.");
 		}
 
 	}
@@ -206,6 +222,11 @@ public class CECS323JDBCProject {
 	public static void listAllPublisher(DatabaseOperations p) {
 		try {
 			List<Publisher> list = p.listPublishers();
+			// Check if publishers is empty.
+			if (list.size() == 0) {
+				throw new SQLException();
+			}
+			// Print result.
 			System.out.printf("%-20s%-30s%-20s%-20s\n", "PublisherName", "PublisherAddress", "PublisherPhone",
 					"PublisherEmail");
 			for (int i = 0; i < list.size(); i++) {
@@ -213,7 +234,7 @@ public class CECS323JDBCProject {
 						list.get(i).publisherPhone, list.get(i).publisherEmail);
 			}
 		} catch (SQLException s) {
-			System.out.println("Error: Code 3");
+			System.out.println("ERROR: Publishers is empty.");
 		}
 	}
 
@@ -224,25 +245,33 @@ public class CECS323JDBCProject {
 	 */
 	public static void printDataForAPublisher(DatabaseOperations d, Scanner in) {
 		try {
-			List<String> list=d.listPublisherNames();
+			List<String> list = d.listPublisherNames();
+			// Check if Publishers is empty.
+			if (list.size() == 0) {
+				throw new SQLException();
+			}
+			// Print available publishers
 			System.out.println("-Available Publishers-");
-			for (int i=0; i<list.size();i++) {
+			for (int i = 0; i < list.size(); i++) {
 				System.out.println(list.get(i));
 			}
+			// Get input
 			System.out.print("Enter publisher name: ");
-                        in.nextLine();
-                        String pubName=in.nextLine();
-                        System.out.println(pubName);
-			Publisher p=d.getPublisher(pubName);
-			System.out.printf("%-20s%-30s%-20s%-20s\n", "PublisherName", "PublisherAddress", "PublisherPhone",
-					"PublisherEmail");
-			System.out.printf("%-20s%-30s%-20s%-20s\n", p.publisherName, p.publisherAddress,
-					p.publisherPhone, p.publisherEmail);
-			
+			in.nextLine();
+			String pubName = in.nextLine();
+			Publisher p = d.getPublisher(pubName);
+			// Print result
+			if (p.publisherName != null) {
+				System.out.printf("%-20s%-30s%-20s%-20s\n", "PublisherName", "PublisherAddress", "PublisherPhone",
+						"PublisherEmail");
+				System.out.printf("%-20s%-30s%-20s%-20s\n", p.publisherName, p.publisherAddress, p.publisherPhone,
+						p.publisherEmail);
+			}
 		} catch (SQLException e) {
-			System.out.println("Error: Code 9");
+			System.out.println("ERROR: Publishers is empty.");
+		} catch (NullPointerException np) {
+			System.out.println("ERROR: Publisher was not found.");
 		}
-		
 	}
 
 	/**
@@ -254,14 +283,18 @@ public class CECS323JDBCProject {
 	public static void listAllBookTitle(DatabaseOperations b) {
 		try {
 			List<String> list = b.listBookTitles();
+			// Check if Books is empty.
+			if (list.size() == 0) {
+				throw new SQLException();
+			}
+			// Print result.
 			System.out.printf("%-10s", "BookTitle\n");
 			for (int i = 0; i < list.size(); i++) {
 				System.out.printf("%-10s\n", list.get(i));
 			}
 		} catch (SQLException s) {
-			System.out.println("Error: Code 4");
+			System.out.println("ERROR: Books is empty.");
 		}
-
 	}
 
 	/**
@@ -274,24 +307,36 @@ public class CECS323JDBCProject {
 	 */
 	public static void listDataForABook(DatabaseOperations b, Scanner in) {
 		try {
-			System.out.print("Enter GroupName:");
-                        in.nextLine();
-			String groupName =in.nextLine();
-			System.out.print("Enter BookTitle: ");
+			// Check if Books is empty.
+			if (b.listBookTitles().size() == 0) {
+				throw new SQLException();
+			}
+			// Print available Publishers and WritingGroups.
+			printAvaialbeBooks(b);
+			// Get input.
+			System.out.print("Enter BookTitle:");
+			in.nextLine();
 			String bookTitle = in.nextLine();
+			System.out.print("Enter groupName: ");
+			String groupName = in.nextLine();
 			Book book = b.getBook(new BookKeyData(bookTitle, groupName));
 			BookDetail bookDetail = b.getBookDetails(new BookKeyData(bookTitle, groupName));
-			System.out.printf("%-40s%-20s%-20s%-20s%-20s%-20s%-20s%-20s%-30s%-30s%-20s\n", "BookTitle", "YearPublished",
-					"NumberPages", "GroupName", "HeadWriter", "YearFormed", "Subject", "PublisherName",
-					"PublisherAddress", "PublisherPhone", "PublisherEmail");
-			System.out.printf("%-40s%-20s%-20s%-20s%-20s%-20s%-20s%-20s%-30s%-30s%-20s\n", book.bookTitle,
-					book.yearPublished, book.numberPages, bookDetail.writingGroup.groupName,
-					bookDetail.writingGroup.headWriter, bookDetail.writingGroup.yearFormed,
-					bookDetail.writingGroup.subject, bookDetail.publisher.publisherName,
-					bookDetail.publisher.publisherAddress, bookDetail.publisher.publisherPhone,
-					bookDetail.publisher.publisherEmail);
+			// Print result.
+			if (book.groupName != null) {
+				System.out.printf("%-40s%-20s%-20s%-20s%-20s%-20s%-20s%-20s%-30s%-30s%-20s\n", "BookTitle",
+						"YearPublished", "NumberPages", "GroupName", "HeadWriter", "YearFormed", "Subject",
+						"PublisherName", "PublisherAddress", "PublisherPhone", "PublisherEmail");
+				System.out.printf("%-40s%-20s%-20s%-20s%-20s%-20s%-20s%-20s%-30s%-30s%-20s\n", book.bookTitle,
+						book.yearPublished, book.numberPages, bookDetail.writingGroup.groupName,
+						bookDetail.writingGroup.headWriter, bookDetail.writingGroup.yearFormed,
+						bookDetail.writingGroup.subject, bookDetail.publisher.publisherName,
+						bookDetail.publisher.publisherAddress, bookDetail.publisher.publisherPhone,
+						bookDetail.publisher.publisherEmail);
+			}
 		} catch (SQLException s) {
-			System.out.println("Error: Code 5");
+			System.out.println("ERROR: Books is empty.");
+		} catch (NullPointerException np) {
+			System.out.println("ERROR: Book was not found.");
 		}
 
 	}
@@ -306,21 +351,41 @@ public class CECS323JDBCProject {
 	 */
 	public static void insertABook(DatabaseOperations d, Scanner in) {
 		try {
+			if (d.listWritingGroupNames().size() == 0 || d.listPublisherNames().size() == 0) {
+				throw new SQLException();
+			}
+			// Print out available publisher and group.
+			System.out.println("-Avaialbe Publishers-");
+			List<String> s = d.listPublisherNames();
+			for (int i = 0; i < s.size(); i++) {
+				System.out.println(s.get(i));
+			}
+			System.out.println("-Avaialbe WritingGroups-");
+			s = d.listWritingGroupNames();
+			for (int i = 0; i < s.size(); i++) {
+				System.out.println(s.get(i));
+			}
+			// Get input.
 			System.out.print("Enter BookTitle: ");
-                        in.nextLine();
+			in.nextLine();
 			String bookTitle = in.nextLine();
 			System.out.print("Enter YearPublished: ");
 			String yearPublished = in.nextLine();
 			System.out.print("Enter NumberPages: ");
 			int numberPages = in.nextInt();
 			System.out.print("Enter GroupName: ");
-                        in.nextLine();
+			in.nextLine();
 			String groupName = in.nextLine();
 			System.out.print("Enter PublisherName: ");
 			String publisherName = in.nextLine();
+			// Insert into Books.
 			d.insertBook(new Book(bookTitle, groupName, publisherName, yearPublished, numberPages));
 		} catch (SQLException s) {
-			System.out.println("Error: Code 6");
+			System.out.println("ERROR: Unable to insert book when publishers or writing groups is empty.");
+		} catch (IllegalArgumentException iae) {
+			System.out.println("ERROR: YearPublished should be integer. Insertion Fail!!!");
+		} catch (InputMismatchException im) {
+			System.out.println("ERROR: NumberPages should be integer. Insertion Fail!!!");
 		}
 
 	}
@@ -333,10 +398,21 @@ public class CECS323JDBCProject {
 	 * @throws SQLIntegrityConstraintViolationException
 	 * @throws SQLException
 	 */
-	public static void insertAPublisher(DatabaseOperations d, Scanner in) throws SQLException {
+	public static void insertAPublisher(DatabaseOperations d, Scanner in) {
 		try {
+			// Check if Publishers is empty.
+			if (d.listPublisherNames().size() == 0) {
+				throw new SQLException();
+			}
+			// Print available publishers
+			System.out.println("-Avaialbe Publishers-");
+			List<String> s = d.listPublisherNames();
+			for (int i = 0; i < s.size(); i++) {
+				System.out.println(s.get(i));
+			}
+			// Get input.
 			System.out.print("Enter OldPublisherName: ");
-                        in.nextLine();
+			in.nextLine();
 			String oldPub = in.nextLine();
 			System.out.println("-Get New Publisher Info-");
 			System.out.print("Enter PublisherName: ");
@@ -346,13 +422,18 @@ public class CECS323JDBCProject {
 			System.out.print("Enter PublisherPhone: ");
 			String publisherPhone = in.nextLine();
 			System.out.print("Enter PublisherEmail: ");
-                        String publisherEmail = in.nextLine();
+			String publisherEmail = in.nextLine();
+			// Check if oldPublisher actually exist.
+			if (d.getPublisher(oldPub).publisherName == null) {
+			}
+			// Replace publisher
 			d.insertPublisher(new Publisher(publisherName, publisherAddress, publisherPhone, publisherEmail));
 			d.replacePublisher(oldPub, publisherName);
 			d.deletePublisher(oldPub);
+		} catch (NullPointerException np) {
+			System.out.println("ERROR: Old publisher was not found. Insertion Fail!!!");
 		} catch (SQLException s) {
-                    System.out.println(s);
-                    System.out.println("Error: Code 7");
+			System.out.println("ERROR: Publisher is empty");
 		}
 	}
 
@@ -365,14 +446,46 @@ public class CECS323JDBCProject {
 	 */
 	public static void removeABook(DatabaseOperations d, Scanner in) {
 		try {
-			System.out.print("Enter BookTitle: ");
-                        in.nextLine();
+			// Check if Books is empty.
+			if (d.listBookTitles().size() == 0) {
+				throw new SQLException();
+			}
+			// Print available Publishers and WritingGroups
+			printAvaialbeBooks(d);
+			// Get input
+			System.out.print("Enter BookTitle:");
+			in.nextLine();
 			String bookTitle = in.nextLine();
-			System.out.print("Enter GroupName: ");
+			System.out.print("Enter groupName: ");
 			String groupName = in.nextLine();
+			// Check if the book existed.
+			if (d.getBook(bookTitle, groupName).bookTitle == null) {
+				throw new NullPointerException();
+			}
+			// Perform operation
 			d.deleteBook(new BookKeyData(bookTitle, groupName));
 		} catch (SQLException s) {
-			System.out.println("Error: Code 8");
+			System.out.println("ERROR: Books is empty.");
+		} catch (NullPointerException iie) {
+			System.out.println("ERROR: Book doesn't not existed in the database.");
+		}
+
+	}
+
+	/**
+	 * This function is used to print available bookTitle and groupName
+	 * combination.
+	 * 
+	 * @param d DatabaseOperations object
+	 * @throws SQLException the exception which will be handle by other
+	 *             functions.
+	 */
+	public static void printAvaialbeBooks(DatabaseOperations d) throws SQLException {
+		List<Book> list = d.listBooks();
+		System.out.println("-Avaialbe Book-");
+		System.out.printf("%-40s%-10s\n", "BookTitle", "GroupName");
+		for (int i = 0; i < list.size(); i++) {
+			System.out.printf("%-40s%-10s\n", list.get(i).bookTitle, list.get(i).groupName);
 		}
 
 	}

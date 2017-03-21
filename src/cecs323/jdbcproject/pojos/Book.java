@@ -59,6 +59,6 @@ public class Book {
 		this.groupName = groupName;
 		this.publisherName = pubName;
 		this.numberPages = pages;
-                this.yearPublished=year;
+		this.yearPublished = year;
 	}
 }
