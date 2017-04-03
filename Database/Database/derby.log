@@ -12,3 +12,9 @@ os.arch=amd64
 os.version=6.1
 derby.system.home=D:\Workstation\CECS323-JDBCProject\Database\Database
 Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Mon Mar 20 22:43:12 PDT 2017: Shutting down Derby engine
+----------------------------------------------------------------
+Mon Mar 20 22:43:12 PDT 2017:
+Shutting down instance a816c00e-015a-ef48-869f-00005fa91774 on database directory D:\Workstation\CECS323-JDBCProject\Database\Database\JDBCProjectDatabase with class loader sun.misc.Launcher$AppClassLoader@6f94fa3e 
+----------------------------------------------------------------
