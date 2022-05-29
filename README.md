@@ -8,7 +8,7 @@ An implementation of java front-end with NetBeans database.
  - [Java](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html)
  
 ## Author
- - [Sotheanith Sok](https://github.com/sotheanith)
+ - [Sotheanith Sok](https://github.com/sotheanith-sok)
  - [Nicholas Utz](https://github.com/utznicholas)
 
 ## Course
