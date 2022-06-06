@@ -56,19 +56,19 @@ Special thank to
 
 <!-- References -->
 <!-- Shield Icons-->
-[contributors_shield]: https://img.shields.io/github/contributors/sotheanithsok/Menh-LLC.svg?style=for-the-badge
-[forks_shield]: https://img.shields.io/github/forks/sotheanithsok/Menh-LLC.svg?style=for-the-badge
-[stars_shield]: https://img.shields.io/github/stars/sotheanithsok/Menh-LLC.svg?style=for-the-badge
-[issues_shield]: https://img.shields.io/github/issues/sotheanithsok/Menh-LLC.svg?style=for-the-badge
-[license_shield]: https://img.shields.io/github/license/sotheanithsok/Menh-LLC.svg?style=for-the-badge
+[contributors_shield]: https://img.shields.io/github/contributors/sotheanithsok/Java-Database-Connectivity.svg?style=for-the-badge
+[forks_shield]: https://img.shields.io/github/forks/sotheanithsok/Java-Database-Connectivity.svg?style=for-the-badge
+[stars_shield]: https://img.shields.io/github/stars/sotheanithsok/Java-Database-Connectivity.svg?style=for-the-badge
+[issues_shield]: https://img.shields.io/github/issues/sotheanithsok/Java-Database-Connectivity.svg?style=for-the-badge
+[license_shield]: https://img.shields.io/github/license/sotheanithsok/Java-Database-Connectivity.svg?style=for-the-badge
 [linkedin_shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 
 <!-- Shield URLs -->
-[contributors_url]: https://github.com/sotheanithsok/Menh-LLC/graphs/contributors
-[forks_url]: https://github.com/sotheanithsok/Menh-LLC/network/members
-[stars_url]: https://github.com/sotheanithsok/Menh-LLC/stargazers
-[issues_url]: https://github.com/sotheanithsok/Menh-LLC/issues
-[license_url]: https://github.com/sotheanithsok/Menh-LLC/blob/master/LICENSE
+[contributors_url]: https://github.com/sotheanithsok/Java-Database-Connectivity/graphs/contributors
+[forks_url]: https://github.com/sotheanithsok/Java-Database-Connectivity/network/members
+[stars_url]: https://github.com/sotheanithsok/Java-Database-Connectivity/stargazers
+[issues_url]: https://github.com/sotheanithsok/Java-Database-Connectivity/issues
+[license_url]: https://github.com/sotheanithsok/Java-Database-Connectivity/blob/master/LICENSE
 [linkedin_url]: https://www.linkedin.com/in/sotheanith-sok-969ab0b3/
 
 <!-- Other links -->
